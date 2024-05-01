@@ -1,33 +1,22 @@
-from datetime import datetime
-
 from django.shortcuts import get_object_or_404, render
 
-from blog.models import Post, Category
-
-from blog.constants import QUANTITY_POSTS
-
-
-def queryset_posts():
-    return Post.objects.select_related(
-        'category', 'author', 'location').filter(
-            pub_date__lte=datetime.now(),
-            category__is_published=True,
-            is_published=True,
-    )
+from blog.constants import POSTS_ON_PAGE
+from blog.models import Category
+from blog.utils import queryset_posts
 
 
 def index(request):
     template = 'blog/index.html'
-    posts_list = queryset_posts()[:QUANTITY_POSTS]
-    context = {'post_list': posts_list}
+    published_posts = queryset_posts()[:POSTS_ON_PAGE]
+    context = {'post_list': published_posts}
     return render(request, template, context)
 
 
 def post_detail(request, post_id):
     template = 'blog/detail.html'
-    posts_list = get_object_or_404(
+    post = get_object_or_404(
         queryset_posts(), pk=post_id)
-    context = {'post': posts_list}
+    context = {'post': post}
     return render(request, template, context)
 
 
@@ -38,7 +27,6 @@ def category_posts(request, category_slug):
         is_published=True,
         slug=category_slug
     )
-    posts = queryset_posts().filter(
-        category=category)
-    context = {'category': category, 'post_list': posts}
+    context = {'category': category, 'post_list': queryset_posts().filter(
+        category=category)}
     return render(request, template, context)
