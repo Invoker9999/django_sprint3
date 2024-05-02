@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from blog.constants import (MAX_FIELD_LENGTH_TITLE_OR_NAME_FOR_MODELS,
+from blog.constants import (TITLE_FIELD_LENGTH,
                             REPRESENTATION_LENGTH)
 
 User = get_user_model()
@@ -23,7 +23,7 @@ class BaseBlogModel(models.Model):
 class Category(BaseBlogModel):
     title = models.CharField(
         'Заголовок',
-        max_length=MAX_FIELD_LENGTH_TITLE_OR_NAME_FOR_MODELS)
+        max_length=TITLE_FIELD_LENGTH)
     description = models.TextField('Описание')
     slug = models.SlugField(
         'Идентификатор',
@@ -45,7 +45,7 @@ class Category(BaseBlogModel):
 class Location(BaseBlogModel):
     name = models.CharField(
         'Название места',
-        max_length=MAX_FIELD_LENGTH_TITLE_OR_NAME_FOR_MODELS
+        max_length=TITLE_FIELD_LENGTH
     )
 
     class Meta(BaseBlogModel.Meta):
@@ -59,7 +59,7 @@ class Location(BaseBlogModel):
 class Post(BaseBlogModel):
     title = models.CharField(
         'Заголовок',
-        max_length=MAX_FIELD_LENGTH_TITLE_OR_NAME_FOR_MODELS)
+        max_length=TITLE_FIELD_LENGTH)
     text = models.TextField('Текст')
     pub_date = models.DateTimeField(
         'Дата и время публикации',
